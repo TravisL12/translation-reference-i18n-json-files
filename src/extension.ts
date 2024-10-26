@@ -18,7 +18,30 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         const hoveredWord = document.getText(wordRange);
-        const jsonFilePath = path.join(__dirname, "data.json");
+
+        const config = vscode.workspace.getConfiguration(
+          "json-text-lookup-for-vscode"
+        );
+        let jsonFilePath: string | undefined = config.get("jsonFilePath");
+
+        if (!jsonFilePath || fs.existsSync(jsonFilePath)) {
+          return new vscode.Hover(
+            "JSON file not found. Check your path setting."
+          );
+        }
+
+        if (!path.isAbsolute(jsonFilePath)) {
+          const workspaceFolder = vscode.workspace.workspaceFolders
+            ? vscode.workspace.workspaceFolders[0].uri.fsPath
+            : "";
+
+          if (!workspaceFolder) {
+            return new vscode.Hover("Workspace folder not found.");
+          }
+
+          jsonFilePath = path.join(workspaceFolder, jsonFilePath);
+        }
+
         try {
           const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
           const splitWord = hoveredWord.replace(/['"]/gi, "").split(".");

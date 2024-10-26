@@ -15,6 +15,16 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "JsonTextLookup",
+      "properties": {
+        "json-text-lookup-for-vscode.jsonFilePath": {
+          "type": "string",
+          "default": "./data.json",
+          "description": "Path to the JSON file used for hover tooltips"
+        }
+      }
+    },
     "commands": [],
     "languages": [
       {
