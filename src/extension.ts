@@ -44,21 +44,17 @@ export function activate(context: vscode.ExtensionContext) {
   const searchProvider = vscode.commands.registerCommand(
     "extension.search",
     async () => {
-      // Show input box to enter the search term
       const searchTerm = await vscode.window.showInputBox({
         prompt: "Enter your search term",
       });
 
       if (searchTerm) {
-        // Log the search term in the Output console
         const outputChannel =
           vscode.window.createOutputChannel("Search Results");
         outputChannel.show();
 
-        // Perform the search (you can customize this function)
         const results = performSearch(searchTerm, jsonFilePath);
 
-        // Display results in output channel
         outputChannel.appendLine(`Results for "${searchTerm}":`);
         results.forEach((result) => outputChannel.appendLine(result));
       }

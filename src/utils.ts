@@ -53,7 +53,7 @@ export const recurseObjSearch = (
   results: string[],
   keyPath: string[] = []
 ) => {
-  const nested = nestedObjRef(obj, keyPath) || {};
+  const nested = nestedObjRef(obj, keyPath);
   const keys = Object.keys(nested);
 
   if (!!nested?.translation) {
@@ -62,9 +62,9 @@ export const recurseObjSearch = (
       .includes(query.toLowerCase());
 
     if (hasMatch) {
-      results.push(`${keyPath.join(".")} - ${nested.translation}`);
+      results.push(`${keyPath.join(".")}: ${nested.translation}`);
     }
-  } else {
+  } else if (typeof nested === "object") {
     keys.forEach((key) => {
       recurseObjSearch(query, obj, results, [...keyPath, key]);
     });
