@@ -45,17 +45,57 @@ const getJsonFilePath = () => {
   return { jsonFilePath, err };
 };
 
+const nestedObjRef = (obj: Record<string, any>, keyPath: string[]) =>
+  keyPath.reduce((acc, key) => acc?.[key], obj);
+
+const recurseObjSearch = (
+  query: string,
+  obj: Record<string, any>,
+  results: string[],
+  keyPath: string[] = []
+) => {
+  const nested = nestedObjRef(obj, keyPath) || {};
+  const keys = Object.keys(nested);
+
+  if (!!nested?.translation) {
+    const hasMatch = nested.translation
+      ?.toLowerCase()
+      .includes(query.toLowerCase());
+
+    if (hasMatch) {
+      results.push(`${keyPath.join(".")} - ${nested.translation}`);
+    }
+  } else {
+    keys.forEach((key) => {
+      recurseObjSearch(query, obj, results, [...keyPath, key]);
+    });
+  }
+};
+
+function performSearch(query: string, jsonFilePath?: string): string[] {
+  if (!jsonFilePath) {
+    return [];
+  }
+
+  const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
+
+  const results: string[] = [];
+  recurseObjSearch(query, jsonData, results);
+
+  return results;
+}
+
 export function activate(context: vscode.ExtensionContext) {
-  const provider = vscode.languages.registerHoverProvider(
+  const {
+    jsonFilePath,
+    err,
+  }: { jsonFilePath: string | undefined; err: vscode.Hover | undefined } =
+    getJsonFilePath();
+
+  const hoverProvider = vscode.languages.registerHoverProvider(
     { scheme: "file", language: "javascript" },
     {
       provideHover(document, position) {
-        const {
-          jsonFilePath,
-          err,
-        }: { jsonFilePath: string | undefined; err: vscode.Hover | undefined } =
-          getJsonFilePath();
-
         const splitWord = getHoveredWord(document, position);
 
         if (!jsonFilePath || err || !splitWord) {
@@ -64,9 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         try {
           const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
-          const subtext = splitWord.reduce((word, param) => {
-            return word[param];
-          }, jsonData);
+          const subtext = nestedObjRef(jsonData, splitWord);
 
           const output = subtext
             ? `**Description:** ${subtext.translation}`
@@ -81,7 +119,32 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(provider);
+  const searchProvider = vscode.commands.registerCommand(
+    "extension.search",
+    async () => {
+      // Show input box to enter the search term
+      const searchTerm = await vscode.window.showInputBox({
+        prompt: "Enter your search term",
+      });
+
+      if (searchTerm) {
+        // Log the search term in the Output console
+        const outputChannel =
+          vscode.window.createOutputChannel("Search Results");
+        outputChannel.show();
+
+        // Perform the search (you can customize this function)
+        const results = performSearch(searchTerm, jsonFilePath);
+
+        // Display results in output channel
+        outputChannel.appendLine(`Results for "${searchTerm}":`);
+        results.forEach((result) => outputChannel.appendLine(result));
+      }
+    }
+  );
+
+  context.subscriptions.push(hoverProvider);
+  context.subscriptions.push(searchProvider);
 }
 
 export function deactivate() {}
