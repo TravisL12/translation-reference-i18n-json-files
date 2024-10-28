@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
+import { APP_NAME, JSON_PATH_SETTING } from "./constants";
 
 export const getHoveredWord = (
   document: vscode.TextDocument,
@@ -17,10 +18,8 @@ export const getHoveredWord = (
 };
 
 export const getJsonFilePath = () => {
-  const config = vscode.workspace.getConfiguration(
-    "json-text-lookup-for-vscode"
-  );
-  let jsonFilePath: string | undefined = config.get("jsonFilePath");
+  const config = vscode.workspace.getConfiguration(APP_NAME);
+  let jsonFilePath: string | undefined = config.get(JSON_PATH_SETTING);
   let err;
 
   if (!jsonFilePath || fs.existsSync(jsonFilePath)) {
@@ -62,7 +61,7 @@ export const recurseObjSearch = (
       .includes(query.toLowerCase());
 
     if (hasMatch) {
-      results.push(`${keyPath.join(".")}: ${nested.translation}`);
+      results.push(keyPath.join("."));
     }
   } else if (typeof nested === "object") {
     keys.forEach((key) => {
@@ -77,7 +76,6 @@ export function performSearch(query: string, jsonFilePath?: string): string[] {
   }
 
   const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
-
   const results: string[] = [];
   recurseObjSearch(query, jsonData, results);
 

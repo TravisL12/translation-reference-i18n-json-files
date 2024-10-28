@@ -1,27 +1,24 @@
 import * as vscode from "vscode";
 
-import { getJsonFilePath, performSearch } from "./utils";
+import { performSearch } from "./utils";
 
-export default () => {
-  const {
-    jsonFilePath,
-    err,
-  }: { jsonFilePath: string | undefined; err: vscode.Hover | undefined } =
-    getJsonFilePath();
+export default (jsonFilePath: string) => {
+  return vscode.commands.registerCommand(
+    "extension.findAllSearch",
+    async () => {
+      const searchTerm = await vscode.window.showInputBox({
+        prompt: "Enter your search term",
+      });
 
-  return vscode.commands.registerCommand("extension.search", async () => {
-    const searchTerm = await vscode.window.showInputBox({
-      prompt: "Enter your search term",
-    });
+      if (searchTerm) {
+        const results = performSearch(searchTerm, jsonFilePath);
 
-    if (searchTerm) {
-      const outputChannel = vscode.window.createOutputChannel("Search Results");
-      outputChannel.show();
-
-      const results = performSearch(searchTerm, jsonFilePath);
-
-      outputChannel.appendLine(`Results for "${searchTerm}":`);
-      results.forEach((result) => outputChannel.appendLine(result));
+        await vscode.commands.executeCommand("workbench.action.findInFiles", {
+          query: results.join("|"),
+          isRegex: true,
+          triggerSearch: true,
+        });
+      }
     }
-  });
+  );
 };

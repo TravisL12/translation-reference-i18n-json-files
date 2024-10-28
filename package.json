@@ -27,7 +27,7 @@
     },
     "commands": [
       {
-        "command": "extension.search",
+        "command": "extension.findAllSearch",
         "title": "Run Search"
       }
     ],
