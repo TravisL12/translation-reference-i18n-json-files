@@ -1,14 +1,8 @@
 import * as vscode from "vscode";
 
-import { getJsonFilePath, performSearch } from "./utils";
+import { performSearch } from "./utils";
 
-export default () => {
-  const {
-    jsonFilePath,
-    err,
-  }: { jsonFilePath: string | undefined; err: vscode.Hover | undefined } =
-    getJsonFilePath();
-
+export default (jsonFilePath: string) => {
   return vscode.commands.registerCommand("extension.search", async () => {
     const searchTerm = await vscode.window.showInputBox({
       prompt: "Enter your search term",
