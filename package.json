@@ -25,7 +25,12 @@
         }
       }
     },
-    "commands": [],
+    "commands": [
+      {
+        "command": "extension.search",
+        "title": "Run Search"
+      }
+    ],
     "languages": [
       {
         "id": "javascript",
