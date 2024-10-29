@@ -28,7 +28,7 @@
     "commands": [
       {
         "command": "extension.findAllSearch",
-        "title": "Run Search"
+        "title": "Translation search"
       }
     ],
     "languages": [
@@ -36,12 +36,7 @@
         "id": "javascript",
         "extensions": [
           ".js",
-          ".jsx"
-        ]
-      },
-      {
-        "id": "typescript",
-        "extensions": [
+          ".jsx",
           ".ts",
           ".tsx"
         ]
