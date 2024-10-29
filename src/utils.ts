@@ -93,3 +93,43 @@ export function performSearch(query: string, jsonFilePath?: string): string[] {
 
   return results;
 }
+
+export const recurseChildKeySearch = (
+  query: string,
+  obj: Record<string, any>,
+  results: string[],
+  keyPath: string[] = []
+) => {
+  const nested = nestedObjRef(obj, keyPath);
+  const keys = Object.keys(nested);
+
+  if (keys.includes(query)) {
+    results.push(keyPath.join("."));
+  } else if (typeof nested === "object") {
+    keys.forEach((key) => {
+      recurseChildKeySearch(query, obj, results, [...keyPath, key]);
+    });
+  }
+};
+
+export function findHoveredJsonKey(
+  document: vscode.TextDocument,
+  position: vscode.Position
+) {
+  const hoveredKey = document.getText(
+    document.getWordRangeAtPosition(position, /.*['"]: {/)
+  );
+  const word = hoveredKey.replace(/['":{]/gi, "").trim();
+  const jsonContent = JSON.parse(document.getText());
+
+  const results: string[] = [];
+  recurseChildKeySearch(word, jsonContent, results);
+
+  console.log(word, results, "I am JSON");
+
+  if (results.length === 1) {
+    return `${results[0]}.${word}`;
+  }
+
+  return undefined;
+}

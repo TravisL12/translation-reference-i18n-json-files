@@ -1,13 +1,26 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 
-import { getHoveredWord, getLineOfMatch, nestedObjRef } from "./utils";
+import {
+  findHoveredJsonKey,
+  getHoveredWord,
+  getLineOfMatch,
+  nestedObjRef,
+} from "./utils";
 
 export default (jsonFilePath: string) => {
   return vscode.languages.registerHoverProvider(
-    { scheme: "file", language: "javascript" },
+    [
+      { scheme: "file", language: "javascript" },
+      { scheme: "file", language: "json" },
+    ],
     {
       provideHover(document, position) {
+        if (document.languageId === "json") {
+          const word = findHoveredJsonKey(document, position);
+          return word ? new vscode.Hover(word) : undefined;
+        }
+
         const splitWord = getHoveredWord(document, position);
 
         if (!splitWord) {

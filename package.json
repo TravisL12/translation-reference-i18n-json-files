@@ -10,6 +10,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onLanguage:json",
     "onLanguage:javascript",
     "onHover"
   ],
@@ -32,6 +33,16 @@
       }
     ],
     "languages": [
+      {
+        "id": "json",
+        "aliases": [
+          "JSON",
+          "json"
+        ],
+        "extensions": [
+          ".json"
+        ]
+      },
       {
         "id": "javascript",
         "extensions": [
