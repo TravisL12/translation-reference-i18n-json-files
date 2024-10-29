@@ -36,6 +36,12 @@
         "id": "javascript",
         "extensions": [
           ".js",
+          ".jsx"
+        ]
+      },
+      {
+        "id": "typescript",
+        "extensions": [
           ".ts",
           ".tsx"
         ]
