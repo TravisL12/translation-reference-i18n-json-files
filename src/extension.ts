@@ -5,7 +5,6 @@ import getSearchProvider from "./searchProvider";
 import { getJsonFilePath } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
-  // import settings
   const {
     jsonFilePath,
     err,

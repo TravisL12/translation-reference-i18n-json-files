@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 
-import { getHoveredWord, nestedObjRef } from "./utils";
+import { getHoveredWord, getLineOfMatch, nestedObjRef } from "./utils";
 
 export default (jsonFilePath: string) => {
   return vscode.languages.registerHoverProvider(
@@ -15,14 +15,26 @@ export default (jsonFilePath: string) => {
         }
 
         try {
-          const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
+          const doc = fs.readFileSync(jsonFilePath, "utf8");
+          const jsonData = JSON.parse(doc);
           const subtext = nestedObjRef(jsonData, splitWord);
 
-          const output = subtext
-            ? `**Description:** ${subtext.translation}`
-            : "No text found!";
+          if (!subtext?.translation) {
+            return undefined;
+          }
 
-          return new vscode.Hover(output);
+          const lineNumber = getLineOfMatch(doc, subtext.translation);
+          const uri = vscode.Uri.file(jsonFilePath).with({
+            fragment: `L${lineNumber}`,
+          });
+          const markdownString = new vscode.MarkdownString(
+            `**[Found at L#${lineNumber}](${uri.toString()})**: ${
+              subtext.translation
+            }`
+          );
+          markdownString.isTrusted = true;
+
+          return new vscode.Hover(markdownString);
         } catch (e) {
           console.log(e, "ERROR");
           return null;

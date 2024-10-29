@@ -17,6 +17,18 @@ export const getHoveredWord = (
   return hoveredWord.replace(/['"]/gi, "").split(".");
 };
 
+export const getLineOfMatch = (doc: string, text: string) => {
+  let lineNumber = -1;
+  const lines = doc.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes(text)) {
+      lineNumber = i + 1;
+      break;
+    }
+  }
+  return lineNumber;
+};
+
 export const getJsonFilePath = () => {
   const config = vscode.workspace.getConfiguration(APP_NAME);
   let jsonFilePath: string | undefined = config.get(JSON_PATH_SETTING);
