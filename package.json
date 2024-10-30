@@ -1,8 +1,13 @@
 {
-  "name": "json-text-lookup-for-vscode",
-  "displayName": "JSON text lookup for VSCode",
-  "description": "Hover over a object reference to see the associated string",
+  "name": "translation-reference-for-i18n-json",
+  "displayName": "Translation Reference for i18n JSON Files",
+  "description": "Quick lookup, search, and copy translation text nested in a json file.",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "Travis Lawrence",
+    "email": "travis.lawrence12@gmail.com"
+  },
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -19,7 +24,7 @@
     "configuration": {
       "title": "JsonTextLookup",
       "properties": {
-        "json-text-lookup-for-vscode.jsonFilePath": {
+        "translation-reference-for-i18n-json.jsonFilePath": {
           "type": "string",
           "default": "./data.json",
           "description": "Path to the JSON file used for hover tooltips"

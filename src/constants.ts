@@ -1,2 +1,2 @@
-export const APP_NAME = "json-text-lookup-for-vscode";
+export const APP_NAME = "translation-reference-for-i18n-json";
 export const JSON_PATH_SETTING = "jsonFilePath";
