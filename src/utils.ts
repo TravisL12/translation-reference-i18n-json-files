@@ -127,21 +127,37 @@ export function findHoveredJsonKey(
     return;
   }
 
-  let parentOneLine;
-  let parentTwoLine;
+  let parentKeyOne;
+  let parentKeyTwo;
+  let has2Indent = false;
   const lines = jsonContent.split("\n");
   for (let i = 0; i < position.line + 1; i++) {
     const line = lines[i];
-    if (line.substring(0, 5) === '    "') {
-      parentOneLine = line.replace(/['":{]/gi, "").trim();
-    }
-    if (line.substring(0, 7) === '      "') {
-      parentTwoLine = line.replace(/['":{]/gi, "").trim();
+
+    has2Indent = has2Indent || /^\s{2}"/.test(line);
+
+    // check if indentation is 2 or 4 for top level key.
+    // I tried a function with `new RegExp` but it didn't want to work
+    // for the /^\s{2}"/ pattern
+    if (has2Indent) {
+      if (/^\s{2}"/.test(line)) {
+        parentKeyOne = line.replace(/['":{]/gi, "").trim();
+      }
+      if (/^\s{4}"/.test(line)) {
+        parentKeyTwo = line.replace(/['":{]/gi, "").trim();
+      }
+    } else {
+      if (/^\s{4}"/.test(line)) {
+        parentKeyOne = line.replace(/['":{]/gi, "").trim();
+      }
+      if (/^\s{6}"/.test(line)) {
+        parentKeyTwo = line.replace(/['":{]/gi, "").trim();
+      }
     }
   }
 
-  if (parentOneLine && parentTwoLine && word) {
-    const copyLine = `${parentOneLine}.${parentTwoLine}.${word}`;
+  if (parentKeyOne && parentKeyTwo && word && word !== parentKeyTwo) {
+    const copyLine = `${parentKeyOne}.${parentKeyTwo}.${word}`;
 
     const output = new vscode.MarkdownString(
       `${copyLine}\n\n**[Copy text](command:extension.copyText?${encodeURIComponent(
