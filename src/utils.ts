@@ -120,15 +120,25 @@ export function findHoveredJsonKey(
     document.getWordRangeAtPosition(position, /.*['"]: {/)
   );
   const word = hoveredKey.replace(/['":{]/gi, "").trim();
-  const jsonContent = JSON.parse(document.getText());
+  const jsonContent = document.getText();
 
-  const results: string[] = [];
-  recurseChildKeySearch(word, jsonContent, results);
+  let parentOneLine;
+  let parentTwoLine;
+  const lines = jsonContent.split("\n");
+  for (let i = 0; i < position.line + 1; i++) {
+    const line = lines[i];
+    if (line.substring(0, 5) === '    "') {
+      parentOneLine = line.replace(/['":{]/gi, "").trim();
+    }
+    if (line.substring(0, 7) === '      "') {
+      parentTwoLine = line.replace(/['":{]/gi, "").trim();
+    }
+  }
 
-  console.log(word, results, "I am JSON");
-
-  if (results.length === 1) {
-    return `${results[0]}.${word}`;
+  if (parentOneLine && parentTwoLine && word) {
+    return new vscode.MarkdownString(
+      `${parentOneLine}.${parentTwoLine}.${word}`
+    );
   }
 
   return undefined;
