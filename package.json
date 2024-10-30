@@ -30,6 +30,10 @@
       {
         "command": "extension.findAllSearch",
         "title": "Translation search"
+      },
+      {
+        "command": "extension.copyText",
+        "title": "Copy Text"
       }
     ],
     "languages": [

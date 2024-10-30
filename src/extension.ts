@@ -15,8 +15,20 @@ export function activate(context: vscode.ExtensionContext) {
     return err;
   }
 
-  context.subscriptions.push(getHoverProvider(jsonFilePath));
-  context.subscriptions.push(getSearchProvider(jsonFilePath));
+  const copyTextCommand = vscode.commands.registerCommand(
+    "extension.copyText",
+    (text: string) => {
+      vscode.env.clipboard.writeText(text).then(() => {
+        vscode.window.showInformationMessage(`Copied: ${text}`);
+      });
+    }
+  );
+
+  context.subscriptions.push(
+    getHoverProvider(jsonFilePath),
+    getSearchProvider(jsonFilePath),
+    copyTextCommand
+  );
 }
 
 export function deactivate() {}

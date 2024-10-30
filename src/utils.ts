@@ -122,6 +122,11 @@ export function findHoveredJsonKey(
   const word = hoveredKey.replace(/['":{]/gi, "").trim();
   const jsonContent = document.getText();
 
+  // in case you hover and you get the text of the whole doc
+  if (word.split("\n").length > 1) {
+    return;
+  }
+
   let parentOneLine;
   let parentTwoLine;
   const lines = jsonContent.split("\n");
@@ -136,9 +141,17 @@ export function findHoveredJsonKey(
   }
 
   if (parentOneLine && parentTwoLine && word) {
-    return new vscode.MarkdownString(
-      `${parentOneLine}.${parentTwoLine}.${word}`
+    const copyLine = `${parentOneLine}.${parentTwoLine}.${word}`;
+
+    const output = new vscode.MarkdownString(
+      `**[Copy](command:extension.copyText?${encodeURIComponent(
+        JSON.stringify([`"${copyLine}"`])
+      )})** - ${copyLine} `
     );
+
+    output.isTrusted = true;
+
+    return output;
   }
 
   return undefined;
