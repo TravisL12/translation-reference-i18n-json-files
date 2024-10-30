@@ -144,11 +144,11 @@ export function findHoveredJsonKey(
     const copyLine = `${parentOneLine}.${parentTwoLine}.${word}`;
 
     const output = new vscode.MarkdownString(
-      `**[Copy](command:extension.copyText?${encodeURIComponent(
+      `${copyLine}\n\n**[Copy text](command:extension.copyText?${encodeURIComponent(
         JSON.stringify([`"${copyLine}"`])
-      )})** - ${copyLine} `
+      )})**`
     );
-
+    output.supportHtml = true;
     output.isTrusted = true;
 
     return output;

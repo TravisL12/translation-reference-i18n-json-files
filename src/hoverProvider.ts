@@ -41,10 +41,11 @@ export default (jsonFilePath: string) => {
             fragment: `L${lineNumber}`,
           });
           const markdownString = new vscode.MarkdownString(
-            `**[Found at L#${lineNumber}](${uri.toString()})**: ${
+            `<h4>Translation:</h4>\n\n${
               subtext.translation
-            }`
+            }\n\n**[View in file](${uri.toString()})**`
           );
+          markdownString.supportHtml = true;
           markdownString.isTrusted = true;
 
           return new vscode.Hover(markdownString);
