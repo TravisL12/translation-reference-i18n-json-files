@@ -12,6 +12,8 @@ export default (jsonFilePath: string) => {
   return vscode.languages.registerHoverProvider(
     [
       { scheme: "file", language: "javascript" },
+      { scheme: "file", language: "typescript" },
+      { scheme: "file", language: "typescriptreact" },
       { scheme: "file", language: "json" },
     ],
     {

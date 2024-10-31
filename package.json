@@ -11,12 +11,17 @@
   "engines": {
     "vscode": "^1.94.0"
   },
+  "repository": {
+    "url": "https://github.com/TravisL12/translation-reference-i18n-json-files"
+  },
   "categories": [
     "Other"
   ],
   "activationEvents": [
     "onLanguage:json",
     "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
     "onHover"
   ],
   "main": "./dist/extension.js",
@@ -56,9 +61,27 @@
         "id": "javascript",
         "extensions": [
           ".js",
-          ".jsx",
-          ".ts",
+          ".jsx"
+        ]
+      },
+      {
+        "id": "typescript",
+        "extensions": [
+          ".ts"
+        ],
+        "aliases": [
+          "TypeScript",
+          "ts"
+        ]
+      },
+      {
+        "id": "typescriptreact",
+        "extensions": [
           ".tsx"
+        ],
+        "aliases": [
+          "TypeScript React",
+          "tsx"
         ]
       }
     ]
