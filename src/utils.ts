@@ -82,6 +82,14 @@ export const recurseObjSearch = (
   }
 };
 
+export const searchForComponent = async (results: string[]) => {
+  await vscode.commands.executeCommand("workbench.action.findInFiles", {
+    query: results.join("|"),
+    isRegex: true,
+    triggerSearch: true,
+  });
+};
+
 export function performSearch(query: string, jsonFilePath?: string): string[] {
   if (!jsonFilePath) {
     return [];
@@ -159,11 +167,22 @@ export function findHoveredJsonKey(
   if (parentKeyOne && parentKeyTwo && word && word !== parentKeyTwo) {
     const copyLine = `${parentKeyOne}.${parentKeyTwo}.${word}`;
 
-    const output = new vscode.MarkdownString(
-      `${copyLine}\n\n**[Copy text](command:extension.copyText?${encodeURIComponent(
+    const output = new vscode.MarkdownString(`${copyLine}\n\n`);
+
+    // append copy feature
+    output.appendMarkdown(
+      `**[Copy text](command:extension.copyText?${encodeURIComponent(
         JSON.stringify([`"${copyLine}"`])
-      )})**`
+      )})** - `
     );
+
+    // append find references
+    output.appendMarkdown(
+      `**[Find References](command:extension.executeFunctionCommand?${encodeURIComponent(
+        JSON.stringify([copyLine])
+      )} "Click to search for components using this string")**`
+    );
+
     output.supportHtml = true;
     output.isTrusted = true;
 

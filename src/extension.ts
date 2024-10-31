@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import getHoverProvider from "./hoverProvider";
 import getSearchProvider from "./searchProvider";
-import { getJsonFilePath } from "./utils";
+import { getJsonFilePath, searchForComponent } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
   const {
@@ -24,10 +24,18 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const jsonSearchReferences = vscode.commands.registerCommand(
+    "extension.executeFunctionCommand",
+    async (results: string) => {
+      await searchForComponent([results]);
+    }
+  );
+
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
     getSearchProvider(jsonFilePath),
-    copyTextCommand
+    copyTextCommand,
+    jsonSearchReferences
   );
 }
 

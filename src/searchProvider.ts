@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { performSearch } from "./utils";
+import { performSearch, searchForComponent } from "./utils";
 
 export default (jsonFilePath: string) => {
   return vscode.commands.registerCommand(
@@ -13,11 +13,7 @@ export default (jsonFilePath: string) => {
       if (searchTerm) {
         const results = performSearch(searchTerm, jsonFilePath);
 
-        await vscode.commands.executeCommand("workbench.action.findInFiles", {
-          query: results.join("|"),
-          isRegex: true,
-          triggerSearch: true,
-        });
+        await searchForComponent(results);
       }
     }
   );
