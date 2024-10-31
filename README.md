@@ -18,12 +18,22 @@ This path should be relative to your project. Example:
 
 ## Search by the translation string to find any components that text exists within.
 
+![alt text](translation_search.png)
+
 Use the command prompt (`Command+Shift+P`) and use the "Translation search" function. Enter in a string you are searching for and the results will be provided with any components that have a translation string that match your query.
 
 ## Quickly reference what a translation variable text is.
 
 ![alt text](hover_over.png)
 
-## Copy new translation references created
+## Copy new translation references and search for references
 
-![alt text](new_translation.png)
+![alt text](find_references.png)
+
+Within the tranlation json file you can hover over a key to quickly see the combined string of the parent keys. Copy this text quickly with the "Copy text" button, and also quickly do a Find All search for components that reference this string.
+
+#### Installing from VSIX
+
+If you have the VSIX file you can install this by opening the "Extensions" panel in VSCode and choosing "Install from VSIX" from the sub-menu at the top of the sidebar.
+
+![alt text](vsix_menu.png)
