@@ -1,0 +1,9 @@
+# Ignore TypeScript config files
+tsconfig.json
+tsconfig.*.json
+
+# Ignore other unnecessary files for the packaged extension
+.vscode/
+dist/          # if you only want to include built files, keep this if needed
+node_modules/  # usually handled automatically, but can be explicitly excluded
+src/**/*.ts    # if you only want compiled JS, not raw TypeScript files

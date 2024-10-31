@@ -11,12 +11,16 @@
   "engines": {
     "vscode": "^1.94.0"
   },
+  "repository": {
+    "url": "https://github.com/TravisL12/translation-reference-i18n-json-files"
+  },
   "categories": [
     "Other"
   ],
   "activationEvents": [
     "onLanguage:json",
     "onLanguage:javascript",
+    "onLanguage:typescript",
     "onHover"
   ],
   "main": "./dist/extension.js",
@@ -56,7 +60,12 @@
         "id": "javascript",
         "extensions": [
           ".js",
-          ".jsx",
+          ".jsx"
+        ]
+      },
+      {
+        "id": "typescript",
+        "extensions": [
           ".ts",
           ".tsx"
         ]
@@ -81,11 +90,13 @@
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.13.0",
-    "typescript": "^5.6.3",
     "ts-loader": "^9.5.1",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.6.3"
   }
 }
