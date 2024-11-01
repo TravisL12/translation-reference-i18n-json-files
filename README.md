@@ -22,15 +22,15 @@ This path should be relative to your project. Example:
 
 Use the command prompt (`Command+Shift+P`) and use the "Translation search" function. Enter in a string you are searching for and the results will be provided with any components that have a translation string that match your query.
 
-## Quickly reference what a translation variable text is.
+## Hover over translation to display the translation text
 
 ![alt text](hover_over.png)
 
-## Copy new translation references and search for references
+## Copy new translation references and search for references with your JSON file
 
 ![alt text](find_references.png)
 
-Within the tranlation json file you can hover over a key to quickly see the combined string of the parent keys. Copy this text quickly with the "Copy text" button, and also quickly do a Find All search for components that reference this string.
+Within the translation json file you can hover over a key to see the combined string of the parent keys. Copy this text with the "Copy text" button, and do a Find All search for components that reference this string.
 
 #### Installing from VSIX
 
