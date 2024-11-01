@@ -9,6 +9,7 @@
     "name": "Travis Lawrence",
     "email": "travis.lawrence12@gmail.com"
   },
+  "publisher": "TravisLawrence",
   "engines": {
     "vscode": "^1.94.0"
   },
