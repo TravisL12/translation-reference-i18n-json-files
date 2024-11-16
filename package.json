@@ -86,7 +86,24 @@
           "tsx"
         ]
       }
-    ]
+    ],
+    "views": {
+      "jsonSidebarContainer": [
+        {
+          "id": "jsonSidebar",
+          "name": "JSON Data"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "jsonSidebarContainer",
+          "title": "JSON Sidebar",
+          "icon": "translation_extension_icon.png"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",

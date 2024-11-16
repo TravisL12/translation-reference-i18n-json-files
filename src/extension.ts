@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import getHoverProvider from "./hoverProvider";
 import getSearchProvider from "./searchProvider";
 import { getJsonFilePath, searchForComponent } from "./utils";
+import JsonSidebarViewProvider from "./sidebar";
 
 export function activate(context: vscode.ExtensionContext) {
   const {
@@ -31,11 +32,17 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const sideBarView = vscode.window.registerWebviewViewProvider(
+    "jsonSidebar",
+    new JsonSidebarViewProvider(context)
+  );
+
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
     getSearchProvider(jsonFilePath),
     copyTextCommand,
-    jsonSearchReferences
+    jsonSearchReferences,
+    sideBarView
   );
 }
 
