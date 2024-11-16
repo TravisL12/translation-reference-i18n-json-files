@@ -1,9 +1,30 @@
 import * as vscode from "vscode";
+import { getJsonFilePath } from "./utils";
+import * as fs from "fs";
 
 class JsonSidebarViewProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
+  private _jsonData?: object; // Temporary storage for JSON data if loaded before the view is ready
 
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(private readonly context: vscode.ExtensionContext) {
+    this.loadDefaultJsonData();
+  }
+
+  loadDefaultJsonData() {
+    try {
+      const { jsonFilePath } = getJsonFilePath();
+      if (!jsonFilePath) {
+        return;
+      }
+
+      const doc = fs.readFileSync(jsonFilePath, "utf8");
+      const jsonData = JSON.parse(doc);
+
+      this.setJsonData(jsonData);
+    } catch (error) {
+      console.error("Error loading default JSON data:", error);
+    }
+  }
 
   resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -20,10 +41,15 @@ class JsonSidebarViewProvider implements vscode.WebviewViewProvider {
           break;
       }
     });
+
+    if (this._jsonData) {
+      this.setJsonData(this._jsonData);
+    }
   }
 
   // Send JSON data to the webview
   setJsonData(data: object) {
+    this._jsonData = data;
     if (this._view) {
       this._view.webview.postMessage({ type: "jsonData", data });
     }
@@ -32,7 +58,6 @@ class JsonSidebarViewProvider implements vscode.WebviewViewProvider {
   // Define HTML for the sidebar view
   private getHtmlForWebview(webview: vscode.Webview): string {
     const nonce = getNonce();
-
     return `<!DOCTYPE html>
       <html lang="en">
       <head>

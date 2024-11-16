@@ -40,6 +40,10 @@
     },
     "commands": [
       {
+        "command": "jsonSidebar.reloadJson",
+        "title": "Reload JSON Data in Sidebar"
+      },
+      {
         "command": "extension.findAllSearch",
         "title": "Translation search"
       },
@@ -91,7 +95,8 @@
       "jsonSidebarContainer": [
         {
           "id": "jsonSidebar",
-          "name": "JSON Data"
+          "name": "JSON Data",
+          "type": "webview"
         }
       ]
     },

@@ -32,9 +32,17 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const sidebarProvider = new JsonSidebarViewProvider(context);
   const sideBarView = vscode.window.registerWebviewViewProvider(
     "jsonSidebar",
-    new JsonSidebarViewProvider(context)
+    sidebarProvider
+  );
+
+  const reloadSidebar = vscode.commands.registerCommand(
+    "jsonSidebar.reloadJson",
+    async () => {
+      sidebarProvider.loadDefaultJsonData();
+    }
   );
 
   context.subscriptions.push(
@@ -42,7 +50,8 @@ export function activate(context: vscode.ExtensionContext) {
     getSearchProvider(jsonFilePath),
     copyTextCommand,
     jsonSearchReferences,
-    sideBarView
+    sideBarView,
+    reloadSidebar
   );
 }
 
