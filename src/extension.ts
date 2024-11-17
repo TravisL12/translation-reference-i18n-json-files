@@ -43,6 +43,15 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  const fileWatcher = vscode.workspace.createFileSystemWatcher(
+    getJsonFilePath().jsonFilePath as string
+  );
+
+  fileWatcher.onDidChange(() => {
+    treeDataProvider.refresh();
+    treeDataProvider.loadData();
+  });
+
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
     getSearchProvider(jsonFilePath),
