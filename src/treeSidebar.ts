@@ -27,16 +27,28 @@ class JsonTreeDataProvider
 
   constructor(private context: vscode.ExtensionContext) {
     // Load JSON data (this can be from a file, API, etc.)
+    const { jsonFilePath } = getJsonFilePath();
+    if (!jsonFilePath) {
+      return;
+    }
+
+    const doc = fs.readFileSync(jsonFilePath, "utf8");
+    // this.jsonData = JSON.parse(doc);
     this.jsonData = {
       name: "Root",
       children: [
         {
           name: "Item 1",
-          children: [{ name: "Subitem 1.1" }, { name: "Subitem 1.2" }],
+          children: [
+            { name: "Subitem 1.1", children: [{ name: "Travis" }] },
+            { name: "Subitem 1.2" },
+          ],
         },
         { name: "Item 2", children: [{ name: "Subitem 2.1" }] },
       ],
     };
+
+    console.log(this.jsonData, "this.jsonData");
   }
 
   refresh(): void {
