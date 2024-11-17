@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   const jsonSearchReferences = vscode.commands.registerCommand(
-    "extension.executeFunctionCommand",
+    "extension.searchCommand",
     async (results: string) => {
       await searchForComponent([results]);
     }
