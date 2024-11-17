@@ -2,6 +2,35 @@ import * as vscode from "vscode";
 import { getJsonFilePath } from "./utils";
 import * as fs from "fs";
 
+type TreeNode = {
+  name: string;
+  children?: TreeNode[];
+};
+
+function jsonToTree(obj: any, nodeName: string = "Root"): TreeNode {
+  const node: TreeNode = { name: nodeName };
+
+  if (typeof obj === "object" && obj !== null) {
+    node.children = [];
+
+    if (Array.isArray(obj)) {
+      obj.forEach((item, index) => {
+        node.children!.push(jsonToTree(item, `Item ${index + 1}`));
+      });
+    } else {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          node.children!.push(jsonToTree(obj[key], key));
+        }
+      }
+    }
+  } else {
+    node.name = `${nodeName}: ${obj}`;
+  }
+
+  return node;
+}
+
 class TreeSidebarViewProvider extends vscode.TreeItem {
   constructor(
     public readonly label: string,
@@ -33,20 +62,7 @@ class JsonTreeDataProvider
     }
 
     const doc = fs.readFileSync(jsonFilePath, "utf8");
-    // this.jsonData = JSON.parse(doc);
-    this.jsonData = {
-      name: "Root",
-      children: [
-        {
-          name: "Item 1",
-          children: [
-            { name: "Subitem 1.1", children: [{ name: "Travis" }] },
-            { name: "Subitem 1.2" },
-          ],
-        },
-        { name: "Item 2", children: [{ name: "Subitem 2.1" }] },
-      ],
-    };
+    this.jsonData = jsonToTree(JSON.parse(doc));
 
     console.log(this.jsonData, "this.jsonData");
   }
