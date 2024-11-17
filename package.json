@@ -50,6 +50,10 @@
       {
         "command": "extension.copyText",
         "title": "Copy Text"
+      },
+      {
+        "command": "jsonTreeView.refresh",
+        "title": "Refresh JSON Tree"
       }
     ],
     "languages": [
@@ -98,6 +102,12 @@
           "name": "JSON Data",
           "type": "webview"
         }
+      ],
+      "jsonTreeViewContainer": [
+        {
+          "id": "jsonTreeView",
+          "name": "JSON Data Tree"
+        }
       ]
     },
     "viewsContainers": {
@@ -105,6 +115,11 @@
         {
           "id": "jsonSidebarContainer",
           "title": "JSON Sidebar",
+          "icon": "translation_extension_icon.png"
+        },
+        {
+          "id": "jsonTreeViewContainer",
+          "title": "JSON Tree",
           "icon": "translation_extension_icon.png"
         }
       ]

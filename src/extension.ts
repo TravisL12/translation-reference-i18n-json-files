@@ -4,6 +4,7 @@ import getHoverProvider from "./hoverProvider";
 import getSearchProvider from "./searchProvider";
 import { getJsonFilePath, searchForComponent } from "./utils";
 import JsonSidebarViewProvider from "./sidebar";
+import JsonTreeDataProvider from "./treeSidebar";
 
 export function activate(context: vscode.ExtensionContext) {
   const {
@@ -43,6 +44,16 @@ export function activate(context: vscode.ExtensionContext) {
     async () => {
       sidebarProvider.loadDefaultJsonData();
     }
+  );
+
+  const treeDataProvider = new JsonTreeDataProvider(context);
+  vscode.window.registerTreeDataProvider("jsonTreeView", treeDataProvider);
+
+  // Optional: Register a command to refresh the tree view
+  context.subscriptions.push(
+    vscode.commands.registerCommand("jsonTreeView.refresh", () =>
+      treeDataProvider.refresh()
+    )
   );
 
   context.subscriptions.push(
