@@ -3,7 +3,6 @@ import * as vscode from "vscode";
 import getHoverProvider from "./hoverProvider";
 import getSearchProvider from "./searchProvider";
 import { getJsonFilePath, searchForComponent } from "./utils";
-import JsonSidebarViewProvider from "./sidebar";
 import JsonTreeDataProvider from "./treeSidebar";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -33,36 +32,22 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  const sidebarProvider = new JsonSidebarViewProvider(context);
-  const sideBarView = vscode.window.registerWebviewViewProvider(
-    "jsonSidebar",
-    sidebarProvider
-  );
-
-  const reloadSidebar = vscode.commands.registerCommand(
-    "jsonSidebar.reloadJson",
-    async () => {
-      sidebarProvider.loadDefaultJsonData();
-    }
-  );
-
   const treeDataProvider = new JsonTreeDataProvider(context);
   vscode.window.registerTreeDataProvider("jsonTreeView", treeDataProvider);
 
   // Optional: Register a command to refresh the tree view
   context.subscriptions.push(
-    vscode.commands.registerCommand("jsonTreeView.refresh", () =>
-      treeDataProvider.refresh()
-    )
+    vscode.commands.registerCommand("jsonTreeView.refresh", () => {
+      treeDataProvider.refresh();
+      treeDataProvider.loadData();
+    })
   );
 
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
     getSearchProvider(jsonFilePath),
     copyTextCommand,
-    jsonSearchReferences,
-    sideBarView,
-    reloadSidebar
+    jsonSearchReferences
   );
 }
 

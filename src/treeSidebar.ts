@@ -55,6 +55,10 @@ class JsonTreeDataProvider
   private jsonData: any;
 
   constructor(private context: vscode.ExtensionContext) {
+    this.loadData();
+  }
+
+  loadData(): void {
     // Load JSON data (this can be from a file, API, etc.)
     const { jsonFilePath } = getJsonFilePath();
     if (!jsonFilePath) {

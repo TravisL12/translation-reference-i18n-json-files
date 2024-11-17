@@ -40,10 +40,6 @@
     },
     "commands": [
       {
-        "command": "jsonSidebar.reloadJson",
-        "title": "Reload JSON Data in Sidebar"
-      },
-      {
         "command": "extension.findAllSearch",
         "title": "Translation search"
       },
@@ -96,13 +92,6 @@
       }
     ],
     "views": {
-      "jsonSidebarContainer": [
-        {
-          "id": "jsonSidebar",
-          "name": "JSON Data",
-          "type": "webview"
-        }
-      ],
       "jsonTreeViewContainer": [
         {
           "id": "jsonTreeView",
@@ -112,11 +101,6 @@
     },
     "viewsContainers": {
       "activitybar": [
-        {
-          "id": "jsonSidebarContainer",
-          "title": "JSON Sidebar",
-          "icon": "translation_extension_icon.png"
-        },
         {
           "id": "jsonTreeViewContainer",
           "title": "JSON Tree",
