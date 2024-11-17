@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 
 import getHoverProvider from "./hoverProvider";
 import getSearchProvider from "./searchProvider";
+import getSidebarProvider from "./sidebarProvider";
 import { getJsonFilePath, searchForComponent } from "./utils";
-import JsonTreeDataProvider from "./treeSidebar";
 
 export function activate(context: vscode.ExtensionContext) {
   const {
@@ -32,29 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  const treeDataProvider = new JsonTreeDataProvider(context);
-  vscode.window.registerTreeDataProvider("jsonTreeView", treeDataProvider);
-
-  // Optional: Register a command to refresh the tree view
-  context.subscriptions.push(
-    vscode.commands.registerCommand("jsonTreeView.refresh", () => {
-      treeDataProvider.refresh();
-      treeDataProvider.loadData();
-    })
-  );
-
-  const fileWatcher = vscode.workspace.createFileSystemWatcher(
-    getJsonFilePath().jsonFilePath as string
-  );
-
-  fileWatcher.onDidChange(() => {
-    treeDataProvider.refresh();
-    treeDataProvider.loadData();
-  });
-
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
     getSearchProvider(jsonFilePath),
+    getSidebarProvider(jsonFilePath),
     copyTextCommand,
     jsonSearchReferences
   );

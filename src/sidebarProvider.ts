@@ -53,23 +53,29 @@ class JsonTreeDataProvider
   > = this._onDidChangeTreeData.event;
 
   private jsonData: any;
+  private jsonFilePath: any;
 
-  constructor(private context: vscode.ExtensionContext) {
+  constructor(jsonFilePath: string) {
+    this.jsonFilePath = jsonFilePath;
     this.loadData();
+
+    const fileWatcher = vscode.workspace.createFileSystemWatcher(jsonFilePath);
+    fileWatcher.onDidChange(this.refreshSidebar);
   }
 
   loadData(): void {
-    // Load JSON data (this can be from a file, API, etc.)
-    const { jsonFilePath } = getJsonFilePath();
-    if (!jsonFilePath) {
+    if (!this.jsonFilePath) {
       return;
     }
 
-    const doc = fs.readFileSync(jsonFilePath, "utf8");
+    const doc = fs.readFileSync(this.jsonFilePath, "utf8");
     this.jsonData = jsonToTree(JSON.parse(doc));
-
-    console.log(this.jsonData, "this.jsonData");
   }
+
+  refreshSidebar = () => {
+    this.refresh();
+    this.loadData();
+  };
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
@@ -81,7 +87,6 @@ class JsonTreeDataProvider
 
   getChildren(element?: TreeSidebarViewProvider): TreeSidebarViewProvider[] {
     if (!element) {
-      // Root level items
       return this.jsonData.children.map(
         (child: any) =>
           new TreeSidebarViewProvider(
@@ -90,7 +95,6 @@ class JsonTreeDataProvider
           )
       );
     } else {
-      // Get children of a specific item
       const parentItem = this.findItemByName(this.jsonData, element.label);
       return (
         parentItem?.children?.map(
@@ -122,4 +126,12 @@ class JsonTreeDataProvider
   }
 }
 
-export default JsonTreeDataProvider;
+export default (jsonFilePath: string) => {
+  const treeDataProvider = new JsonTreeDataProvider(jsonFilePath);
+  vscode.window.registerTreeDataProvider("jsonTreeView", treeDataProvider);
+
+  return vscode.commands.registerCommand(
+    "extension.refreshTranslation",
+    treeDataProvider.refreshSidebar
+  );
+};
