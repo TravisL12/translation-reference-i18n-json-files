@@ -1,9 +1,14 @@
 import * as vscode from "vscode";
 
 import getHoverProvider from "./hoverProvider";
-import getSearchProvider from "./searchProvider";
 import getSidebarProvider from "./sidebarProvider";
-import { getJsonFilePath, searchForComponent } from "./utils";
+import { getJsonFilePath } from "./utils";
+import {
+  copyTextCommand,
+  jsonSearchReferences,
+  findAllSearch,
+} from "./commands";
+import { APP_NAME } from "./constants";
 
 export function activate(context: vscode.ExtensionContext) {
   const {
@@ -16,28 +21,24 @@ export function activate(context: vscode.ExtensionContext) {
     return err;
   }
 
-  const copyTextCommand = vscode.commands.registerCommand(
-    "extension.copyText",
-    (text: string) => {
-      vscode.env.clipboard.writeText(text).then(() => {
-        vscode.window.showInformationMessage(`Copied: ${text}`);
-      });
-    }
-  );
-
-  const jsonSearchReferences = vscode.commands.registerCommand(
-    "extension.searchCommand",
-    async (results: string) => {
-      await searchForComponent([results]);
+  const reloadOnSettingsChange = vscode.workspace.onDidChangeConfiguration(
+    (event) => {
+      if (event.affectsConfiguration(APP_NAME)) {
+        vscode.window.showInformationMessage(
+          "Configuration changed, reloading..."
+        );
+        vscode.commands.executeCommand("workbench.action.reloadWindow");
+      }
     }
   );
 
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
-    getSearchProvider(jsonFilePath),
     getSidebarProvider(jsonFilePath),
-    copyTextCommand,
-    jsonSearchReferences
+    copyTextCommand(),
+    jsonSearchReferences(),
+    findAllSearch(jsonFilePath),
+    reloadOnSettingsChange
   );
 }
 
