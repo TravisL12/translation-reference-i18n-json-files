@@ -39,3 +39,15 @@ Within the translation json file you can hover over a key to see the combined st
 If you have the VSIX file you can install this by opening the "Extensions" panel in VSCode and choosing "Install from VSIX" from the sub-menu at the top of the sidebar.
 
 ![alt text](vsix_menu.png)
+
+### Publishing/Updating
+
+If personal access token (PAT) has expired then go get a new one: https://dev.azure.com/myUserName/_usersSettings/tokens
+
+Then in the cli use `vsce` (use npx if package `@vscode/vsce` not installed locally) to package and then publish (also login if a new PAT is used). In this order:
+`vsce login <publishName>` (only if PAT is new)
+`vsce package`
+`vsce publish`
+
+Then go verify your publisher page that the version was received:
+https://marketplace.visualstudio.com/manage/publishers/<publisherName>
