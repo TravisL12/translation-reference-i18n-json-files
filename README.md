@@ -16,6 +16,8 @@ This path should be relative to your project. Example:
   }
 ```
 
+- Note: after updating this setting VSCode should do a quick reload of your window to load the new settings file. If it does not reload, or you notice your JSON file doesn't seem to be be loaded you can manually reload your window through the command pallette (cmd/ctrl+Shift+P) and trigger "Reload Window".
+
 ## Search by the translation string to find any components that text exists within.
 
 ![alt text](translation_search.png)
