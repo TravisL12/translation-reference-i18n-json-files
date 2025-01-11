@@ -11,7 +11,7 @@ export const copyTextCommand = () =>
 
 export const jsonSearchReferences = () =>
   vscode.commands.registerCommand(
-    "extension.executeFunctionCommand",
+    "extension.searchCommand",
     async (results: string) => {
       await searchForComponent([results]);
     }
