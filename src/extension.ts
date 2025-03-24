@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   const {
     jsonFilePath,
     err,
-  }: { jsonFilePath: string | undefined; err: vscode.Hover | undefined } =
+  }: { jsonFilePath: string[] | undefined; err: vscode.Hover | undefined } =
     getJsonFilePath();
 
   if (!jsonFilePath || err) {
