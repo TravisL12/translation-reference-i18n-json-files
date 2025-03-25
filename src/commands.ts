@@ -17,14 +17,24 @@ export const jsonSearchReferences = () =>
     }
   );
 
-export const findAllSearch = (jsonFilePath: string) =>
+export const findAllSearch = (jsonFilePath: string[]) =>
   vscode.commands.registerCommand("extension.findAllSearch", async () => {
     const searchTerm = await vscode.window.showInputBox({
       prompt: "Enter your search term",
     });
 
     if (searchTerm) {
-      const results = performSearch(searchTerm, jsonFilePath);
-      await searchForComponent(results);
+      const output = jsonFilePath
+        .map((filePath) => {
+          return performSearch(searchTerm, filePath);
+        })
+        .flat();
+
+      if (output) {
+        const results = await searchForComponent(output);
+        return results;
+      }
+
+      return [];
     }
   });

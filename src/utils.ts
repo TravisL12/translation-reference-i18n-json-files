@@ -34,17 +34,14 @@ export const getJsonFilePath = () => {
   let err,
     jsonFilePath: string | string[] | undefined = config.get(JSON_PATH_SETTING);
 
-  const jsonFilePathArray: (string | undefined)[] = Array.isArray(jsonFilePath)
-    ? jsonFilePath
-    : [jsonFilePath];
-
-  const validPaths: (string | undefined)[] = jsonFilePathArray.filter(
-    (filePath) => filePath && fs.existsSync(filePath)
-  );
+  const jsonFilePathArray: string[] = Array.isArray(jsonFilePath)
+    ? jsonFilePath || ""
+    : [jsonFilePath || ""];
+  const validPaths: string[] = jsonFilePathArray.filter((filePath) => filePath);
 
   if (!jsonFilePath || validPaths.length === 0) {
     err = new vscode.Hover("JSON file not found. Check your path setting.");
-    return { jsonFilePath, err };
+    return { jsonFilePath: jsonFilePathArray, err };
   }
 
   const workspaceFolder = vscode.workspace.workspaceFolders
@@ -53,7 +50,7 @@ export const getJsonFilePath = () => {
 
   if (!workspaceFolder) {
     err = new vscode.Hover("Workspace folder not found.");
-    return { jsonFilePath, err };
+    return { jsonFilePath: jsonFilePathArray, err };
   }
 
   const output = validPaths.map((filePath) => {
