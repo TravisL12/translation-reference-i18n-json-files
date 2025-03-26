@@ -32,8 +32,10 @@
       "title": "JsonTextLookup",
       "properties": {
         "translation-reference-for-i18n-json.jsonFilePath": {
-          "type": "string",
-          "default": "./data.json",
+          "type": "array",
+          "default": [
+            "./data.json"
+          ],
           "description": "Path to the JSON file used for hover tooltips"
         }
       }
