@@ -42,12 +42,12 @@ If you have the VSIX file you can install this by opening the "Extensions" panel
 
 ### Publishing/Updating
 
-If personal access token (PAT) has expired then go get a new one: https://dev.azure.com/myUserName/_usersSettings/tokens
+Use the publisher page to view existing versions (publisher name is in the package.json::publisher field):
+https://marketplace.visualstudio.com/manage/publishers/<publisherName>
+
+##### If personal access token (PAT) has expired then go get a new one: https://dev.azure.com/myUserName (not same as publisher). This page can be navigated to view the marketplace page.
 
 Then in the cli use `vsce` (use npx if package `@vscode/vsce` not installed locally) to package and then publish (also login if a new PAT is used). In this order:
 `vsce login <publishName>` (only if PAT is new)
 `vsce package`
 `vsce publish`
-
-Then go verify your publisher page that the version was received:
-https://marketplace.visualstudio.com/manage/publishers/<publisherName>
