@@ -47,7 +47,9 @@ export default (jsonFilePath: string[]) => {
               const markdownString = new vscode.MarkdownString(
                 `<h4>Translation:</h4>\n\n${
                   subtext.translation
-                }\n\n**[View in file](${uri.toString()})**`
+                }\n\n**[View in file](${uri.toString()})** - **[Copy text](command:extension.copyText?${encodeURIComponent(
+                  JSON.stringify([`"${splitWord.join(".")}"`])
+                )})**`
               );
               markdownString.supportHtml = true;
               markdownString.isTrusted = true;
