@@ -13,13 +13,12 @@ export function activate(context: vscode.ExtensionContext) {
   const {
     jsonFilePath,
     err,
-  }: { jsonFilePath: string | undefined; err: vscode.Hover | undefined } =
+  }: { jsonFilePath: string[]; err: vscode.Hover | undefined } =
     getJsonFilePath();
 
   if (!jsonFilePath || err) {
     return err;
   }
-
   const reloadOnSettingsChange = vscode.workspace.onDidChangeConfiguration(
     (event) => {
       if (event.affectsConfiguration(APP_NAME)) {

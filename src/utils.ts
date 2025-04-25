@@ -31,28 +31,39 @@ export const getLineOfMatch = (doc: string, text: string) => {
 
 export const getJsonFilePath = () => {
   const config = vscode.workspace.getConfiguration(APP_NAME);
-  let jsonFilePath: string | undefined = config.get(JSON_PATH_SETTING);
-  let err;
+  let err,
+    jsonFilePath: string | string[] | undefined = config.get(JSON_PATH_SETTING);
 
-  if (!jsonFilePath || fs.existsSync(jsonFilePath)) {
+  const jsonFilePathArray: string[] = Array.isArray(jsonFilePath)
+    ? jsonFilePath || ""
+    : [jsonFilePath || ""];
+  const validPaths: string[] = jsonFilePathArray.filter((filePath) => filePath);
+
+  if (!jsonFilePath || validPaths.length === 0) {
     err = new vscode.Hover("JSON file not found. Check your path setting.");
-    return { jsonFilePath, err };
+    return { jsonFilePath: jsonFilePathArray, err };
   }
 
-  if (!path.isAbsolute(jsonFilePath)) {
-    const workspaceFolder = vscode.workspace.workspaceFolders
-      ? vscode.workspace.workspaceFolders[0].uri.fsPath
-      : "";
+  const workspaceFolder = vscode.workspace.workspaceFolders
+    ? vscode.workspace.workspaceFolders[0].uri.fsPath
+    : "";
 
-    if (!workspaceFolder) {
-      err = new vscode.Hover("Workspace folder not found.");
-      return { jsonFilePath, err };
+  if (!workspaceFolder) {
+    err = new vscode.Hover("Workspace folder not found.");
+    return { jsonFilePath: jsonFilePathArray, err };
+  }
+
+  const output = validPaths.map((filePath) => {
+    if (!filePath) {
+      return filePath;
     }
 
-    jsonFilePath = path.join(workspaceFolder, jsonFilePath);
-  }
+    return !path.isAbsolute(filePath)
+      ? path.join(workspaceFolder, filePath)
+      : filePath;
+  });
 
-  return { jsonFilePath, err };
+  return { jsonFilePath: output, err };
 };
 
 export const nestedObjRef = (obj: Record<string, any>, keyPath: string[]) =>

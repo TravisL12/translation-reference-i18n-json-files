@@ -2,7 +2,7 @@
   "name": "translation-reference-for-i18n-json",
   "displayName": "Translation Reference for i18n JSON Files",
   "description": "Quick lookup, search, and copy translation text nested in a json file.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "icon": "translation_extension_icon.png",
   "author": {
@@ -32,8 +32,10 @@
       "title": "JsonTextLookup",
       "properties": {
         "translation-reference-for-i18n-json.jsonFilePath": {
-          "type": "string",
-          "default": "./data.json",
+          "type": "array",
+          "default": [
+            "./data.json"
+          ],
           "description": "Path to the JSON file used for hover tooltips"
         }
       }
