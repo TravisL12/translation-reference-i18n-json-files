@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import { APP_NAME, JSON_PATH_SETTING } from "./constants";
+import { TreeNode } from "./types";
 
 export const getHoveredWord = (
   document: vscode.TextDocument,
@@ -189,7 +190,7 @@ export function findHoveredJsonKey(
 
     // append find references
     output.appendMarkdown(
-      `**[Find References](command:extension.executeFunctionCommand?${encodeURIComponent(
+      `**[Find References](command:extension.searchCommand?${encodeURIComponent(
         JSON.stringify([copyLine])
       )} "Click to search for components using this string")**`
     );
@@ -201,4 +202,28 @@ export function findHoveredJsonKey(
   }
 
   return undefined;
+}
+
+export function jsonToTree(obj: any, nodeName: string = "Root"): TreeNode {
+  const node: TreeNode = { name: nodeName };
+
+  if (typeof obj === "object" && obj !== null) {
+    node.children = [];
+
+    if (Array.isArray(obj)) {
+      obj.forEach((item, index) => {
+        node.children!.push(jsonToTree(item, `Item ${index + 1}`));
+      });
+    } else {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          node.children!.push(jsonToTree(obj[key], key));
+        }
+      }
+    }
+  } else {
+    node.name = `${nodeName}: ${obj}`;
+  }
+
+  return node;
 }

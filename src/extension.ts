@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 
 import getHoverProvider from "./hoverProvider";
+import getSidebarProvider from "./sidebarProvider";
 import { getJsonFilePath } from "./utils";
 import {
   copyTextCommand,
@@ -32,6 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     getHoverProvider(jsonFilePath),
+    getSidebarProvider(jsonFilePath),
     copyTextCommand(),
     jsonSearchReferences(),
     findAllSearch(jsonFilePath),
